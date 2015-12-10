@@ -67,4 +67,4 @@ This is a part of MyData Architecture, see [DataOperator](https://github.com/dhr
 
 ### Copying and License
 
-MIT
+This code is licensed under MIT
