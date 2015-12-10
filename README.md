@@ -1,6 +1,6 @@
 # mydatasource
 
-This is a part pf MyData Architecture, see [DataOperator](https://github.com/dhrproject/mydataoperator)
+This is a part of MyData Architecture, see [DataOperator](https://github.com/dhrproject/mydataoperator)
 
 ### Repository structure
 ```
