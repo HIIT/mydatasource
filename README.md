@@ -59,7 +59,7 @@ This is a part of MyData Architecture, see [DataOperator](https://github.com/dhr
 │   ├── requirements.txt                       requirements for running this server
 │   └── run.py                                 app entry point
 ├── doc                                    API documentation
-└── LICSENCE                               open source licsence
+└── LICENSE                               open source licsence
 ```
 ### Documentation
 API Documentation can be found under /doc/swagger.yaml which follow standard Swagger Specification 2.0
