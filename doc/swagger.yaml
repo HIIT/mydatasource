@@ -1,0 +1,595 @@
+swagger: '2.0'
+info:
+  title: MyData Data Source API
+  description: |
+    This document specifies APIs of MyData DataSource.  
+    * __MyData Compliant API__  
+    (for DataOperator. Common for all Data Sources)
+    * __APIs for setting up this Data Source__  
+    (for owner of Data Source. Specific for this particular Data Source)  
+    * __API for fetching data from this Data Source__  
+    (Specific for this particular Data Source)  
+    
+    Overview: 
+        - MyData Compliant API
+          - /auth           login, return <ext_id>
+          - /contract       ext_id required in http-header "Authorization Bearer <ext_id>"
+          - /resource_set   ext_id required in http-header "Authorization Bearer <ext_id>"
+          - /receipt        ext_id required in http-header "Authorization Bearer <ext_id>"
+        - Internal 
+          - /user           register an account
+          - /user/me        Get information of user associated with the used ext_id 
+          - /category       ext_id required in http-header "Authorization Bearer <ext_id>"
+          - /units          ext_id required in http-header "Authorization Bearer <ext_id>"
+          - /label          ext_id required in http-header "Authorization Bearer <ext_id>"
+          - /data           ext_id required in http-header "Authorization Bearer <ext_id>"
+        - API for fetching data
+          - /resource       RPT required in http-header "Authorization Bearer <RPT>"
+    Note:
+    
+        In order to use endpoints that require use of ext_id, you must first login succesfully (/auth-endpoint).  
+        After logging in successfully, you get <ext_id> in JSON-response.  
+        Use ext_id as a token in HTTP-headers of <"Bearer " + ext_id>
+        
+        /resource-endpoint is only used by Data Sink(s) that are allowed to request data from this Data Source.
+        It requires usage of RPT-token and because Data Operator is the only party that issues and validates RPT-tokens,
+        this endpoint cannot be used without first getting a RPT from an actual Data Operator.
+  version: 0.1.0
+  contact:
+    url: 'https://github.com/okffi/mydata'
+  license:
+    name: MIT
+    url: 'http://opensource.org/licenses/MIT'
+host: '178.62.229.148:10001'
+schemes:
+  - http
+  - https
+basePath: /api/v0.1
+consumes:
+  - application/json
+produces:
+  - application/json
+securityDefinitions:
+  ext_id:
+    type: apiKey
+    name: Authorization
+    in: header
+  RPT:
+    type: apiKey
+    name: Authorization
+    in: header
+paths:
+  /auth:
+    post:
+      description: |
+        User login with username and password,
+        return ext_id as a key to call others endpoints. 
+      tags:
+        - Login
+      parameters:
+        - name: body
+          in: body
+          description: JSON Object
+          required: true
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                description: username.
+              password:
+                type: string
+                description: password.
+      responses:
+        '200':
+          description: Login successfully
+          schema:
+            type: object
+            properties:
+              ext_id:
+                type: string
+                description: code for others api-call.
+              message:
+                type: string
+                description: description.
+              status_code:
+                type: integer
+                format: int32
+                description: HTTP Code
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /user:
+    post:
+      description: |
+        register a new user with username, password and email.
+      tags:
+        - Register
+      parameters:
+        - name: body
+          in: body
+          description: JSON Object
+          required: true
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                description: username.
+              password:
+                type: string
+                description: password.
+              email:
+                type: string
+                description: email.
+      responses:
+        '201':
+          description: Registered successfully
+          schema:
+            type: object
+            properties:
+              status_code:
+                type: integer
+                format: int32
+                description: HTTP Code
+              ext_id:
+                type: string
+                description: code for others api-call.
+              message:
+                type: string
+                description: register successfully.
+              
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /user/me:
+    get:
+      security:
+        - ext_id: []
+      description: |
+        Get user's profile.
+      responses:
+        '200':
+          description: User's profile object
+          schema:
+            $ref: '#/definitions/Profile'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /category:
+    post:
+      description: |
+        create new category with category name and description
+      parameters:
+        - name: body
+          in: body
+          description: Category Object
+          required: true
+          schema:
+            $ref: '#/definitions/Category'
+      responses:
+        '201':
+          description: Add successfully
+          schema:
+            $ref: '#/definitions/Succeed'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /units:
+    post:
+      description: |
+        create a new unit with unit name and description
+      parameters:
+        - name: body
+          in: body
+          description: Unit Object
+          required: true
+          schema:
+            $ref: '#/definitions/Unit'
+      responses:
+        '201':
+          description: Add successfully
+          schema:
+            $ref: '#/definitions/Succeed'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /label:
+    post:
+      description: |
+        create a subset of category with label name, units, category and description.
+      parameters:
+        - name: body
+          in: body
+          description: Label Object
+          required: true
+          schema:
+            $ref: '#/definitions/Label'
+      responses:
+        '201':
+          description: Add successfully
+          schema:
+            $ref: '#/definitions/Succeed'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /data:
+    post:
+      description: |
+        Upload dataset to service
+      parameters:
+        - name: body
+          in: body
+          description: DataSet
+          required: true
+          schema:
+            $ref: '#/definitions/DataSet'
+      responses:
+        '201':
+          description: Add successfully
+          schema:
+            $ref: '#/definitions/Succeed'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /contract:
+    get:
+      security:
+        - ext_id: []
+      description: >
+        The contract endpoint return contract that make some rules which the
+        third-party service need to follow when it would like to use the data of
+        service.
+      tags:
+        - Contract
+        - MyData
+      responses:
+        '200':
+          description: Contract Template
+          schema:
+            $ref: '#/definitions/Contract'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /resource_set:
+    post:
+      security:
+        - ext_id: []
+      description: |
+        register a resource set with rs_id and categories.
+      parameters:
+        - name: body
+          in: body
+          description: Json object
+          required: true
+          schema:
+            type: object
+            properties:
+              rs_id:
+                type: string
+                description: the id of resource set generated by MyData.
+              categories:
+                type: array
+                items:
+                  type: string
+                  description: name of data category.
+      tags:
+        - ResourceSet
+        - MyData
+      responses:
+        '201':
+          description: ResourceSet created successfully
+          schema:
+            $ref: '#/definitions/Succeed'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /receipt:
+    post:
+      security:
+        - ext_id: []
+      description: |
+        Creates a new consent_receipt record in Data Source.  
+        Note: Contains rs_id, rpt signing key, ext_id.
+      parameters:
+        - name: body
+          in: body
+          description: Consent Receipt Object
+          required: true
+          schema:
+            $ref: '#/definitions/Consent'
+      tags:
+        - Consent
+        - MyData
+      responses:
+        '201':
+          description: Consent receipt received successfully
+          schema:
+            $ref: '#/definitions/Succeed'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      security:
+        - ext_id: []
+      description: |
+        Update authorization_status of a specific consent.
+      parameters:
+        - name: body
+          in: body
+          description: JSON Object
+          required: true
+          schema:
+            type: object
+            properties:
+              receipt_id:
+                type: string
+                description: Unique local ID for the Consent Receipt (CR).
+              authorization_status:
+                type: string
+                description: |
+                  status of consent, acitve/withdraw/paused
+      tags:
+        - Consent
+        - MyData
+      responses:
+        '200':
+          description: Updated succssfully
+          schema:
+            $ref: '#/definitions/Succeed'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /resource:
+    get:
+      security:
+        - RPT: []
+      description: |
+        Get resource with permission from MyData
+      parameters:
+        - name: rs_id
+          in: query
+          description: resource set id
+          required: true
+          type: string
+        - name: category
+          in: query
+          description: data category
+          required: false
+          type: string
+        - name: label
+          in: query
+          description: subset of category
+          required: false
+          type: string
+      tags:
+        - Resource
+        - MyData
+      responses:
+        '200':
+          description: Resource from service
+          schema:
+            $ref: '#/definitions/Resource'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Contract:
+    type: object
+    properties:
+      actor_id:
+        type: string
+        description: Globally unique ID used to identify MyData actor (service) globally.
+      endpoint_uri:
+        type: string
+        description: For the Sources or Sinks API (Resource Set API).
+      user_id:
+        type: string
+        description: Local identifier of the Account Owner at the sink or source service.
+      status:
+        type: string
+        description: active / passive / withdrawn.
+      created:
+        type: string
+        description: UTC Timestamp as Epoch (seconds).
+      role:
+        type: string
+        description: source / sink / both.
+      legal_role:
+        type: string
+        description: controller / processor.
+      contract_terms:
+        type: string
+        description: As text or as URL to terms.
+      data_type:
+        type: array
+        items:
+          type: string
+          description: name of data category.
+      intendet_use:
+        type: string
+        description: free / comm-sell / comm-keep / anon-research.
+      validity_period:
+        type: string
+        description: auto_renew / valid_until.
+  Consent:
+    type: object
+    properties:
+      consentReceipt:
+        type: object
+        properties:
+          consent_receipt_id:
+            type: string
+            description: Unique local ID for the Consent Receipt (CR). 
+          account_id:
+            type: string
+            description: "Account owner's identity at this DataSource. This is  \"ext_id\" obtained by DataOperator with a call to /auth-endpoint."
+          service_contract_id:
+            type: string
+            description: ID of sink's service contract (from operator).
+          rs_id:
+            type: string
+            description: " for example \"datasource.fi/data/a3h413h4b13h41.\" "
+          key_used_to_sign_rpt:
+            type: string
+            description: " The public key Data Operator has used to sign RPT of this Consent. "
+          authorization_status:
+            type: string
+            description: "Status of this consent. Possible values: [active/withdraw/paused]"
+          consent_summary:
+            type: object
+            properties:
+              data_source:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Name of Data Source that is one party of this Consent.
+                  description:
+                    type: string
+                    description: Short description of Data Source.
+              data_sink:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Name of Data Sink that is one party of this Consent
+                  description:
+                    type: string
+                    description: Short description of Data Sink.
+              data:
+                type: array
+                items:
+                  type: string
+                  description: Categories that user has granted are access to with this Consent.
+  Profile:
+    type: object
+    properties:
+      email:
+        type: string
+        description: user's email.
+      firstname:
+        type: string
+        description: First Name of user.
+      lastname:
+        type: string
+        description: Last Name of user.
+      gender:
+        type: string
+        description: user's gender.
+      address:
+        type: string
+        description: user's address.
+      city:
+        type: string
+        description: City Name.
+      region:
+        type: string
+        description: Region Name.
+      country:
+        type: string
+        description: Country Name.
+  Resource:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+          description: category name.
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              label:
+                type: string
+                description: subset name of category.
+              units:
+                type: string
+                description: unit of subsets' data.
+              sample:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    timestamp:
+                      type: string
+                      description: timestamp.
+                    value:
+                      type: string
+                      description: value.
+  DataSet:
+    type: object
+    properties:
+      label:
+        type: string
+        description: subset name (Label) of category.
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+            timestamp:
+              type: string
+              description: timestamp.
+            value:
+              type: string
+              description: value
+  Category:
+    type: object
+    properties:
+      category:
+        type: string
+      desc:
+        type: string
+  Label:
+    type: object
+    properties:
+      label:
+        type: string
+      units:
+        type: string
+      category:
+        type: string
+      desc:
+        type: string
+  Unit:
+    type: object
+    properties:
+      unit:
+        type: string
+      desc:
+        type: string
+  Succeed:
+    type: object
+    properties:
+      status_code:
+        type: integer
+        format: int32
+        description: HTTP Status Code.
+      message:
+        type: string
+        description: Description of product.
+  Error:
+    type: object
+    properties:
+      status_code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      detail:
+        type: string
