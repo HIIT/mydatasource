@@ -61,6 +61,8 @@ This is a part of MyData Architecture, see [DataOperator](https://github.com/dhr
 ├── doc                                    API documentation
 └── LICSENCE                               open source licsence
 ```
+### Documentation
+API Documentation can be found under /doc/swagger.yaml which follow standard Swagger Specification 2.0
 
 ### More information
 - [MyData Architecture](https://github.com/HIIT/mydata-stack)
