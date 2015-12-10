@@ -1,6 +1,6 @@
 # mydatasource
 
-This is a part of MyData Architecture, see [DataOperator](https://github.com/dhrproject/mydataoperator)
+This is a part ofproof-of-concept implementation of [MyData Architecture](https://github.com/HIIT/mydata-stack). More information about the POC-implementation see [DataOperator](https://github.com/dhrproject/mydataoperator)
 
 ### Repository structure
 ```
@@ -66,6 +66,7 @@ API Documentation can be found under /doc/swagger.yaml which follow standard Swa
 
 ### More information
 - [MyData Architecture](https://github.com/HIIT/mydata-stack)
+- [DataOperator](https://github.com/dhrproject/mydataoperator)
 
 ### Copying and License
 
