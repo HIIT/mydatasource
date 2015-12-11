@@ -1,4 +1,4 @@
-# mydatasource
+# Data Source
 
 This is a part of proof-of-concept implementation of [MyData Architecture](https://github.com/HIIT/mydata-stack). More information about the POC-implementation see [DataOperator](https://github.com/dhrproject/mydataoperator)
 
@@ -23,27 +23,27 @@ This is a part of proof-of-concept implementation of [MyData Architecture](https
 │   │   │   ├── user_info.py                   users' information
 │   │   │   ├── user_account.py                users' account
 │   │   │   ├── status.py                      status list
-│   │   │   └── json_type.py                   customization type inherit SQLAchemdly
+│   │   │   └── json_type.py                   customization type inherit SQLAlchemy
 │   │   ├── handler                            
 │   │   │   ├── __init__.py 
-│   │   │   ├── error_handler.py               customization error handler
+│   │   │   ├── error_handler.py               customized error handler
 │   │   │   └── dhHelper.py                    database handler
 │   │   ├── views                              API Views
 │   │   │   ├── __init__.py 
-│   │   │   ├── user.py                        reigster, login, users' profile
+│   │   │   ├── user.py                        register, login, users' profile
 │   │   │   ├── contract.py                    contract template endpoint 
 │   │   │   ├── receipt.py                     consent receipt
 │   │   │   ├── resource_set.py                resource set
 │   │   │   ├── resource.py                    resource endpoint for sink
 │   │   │   ├── category.py                    
-│   │   │   ├── label.py
-│   │   │   ├── units.py
-│   │   │   ├── data.py
+│   │   │   ├── label.py                       
+│   │   │   ├── units.py                       
+│   │   │   ├── data.py                        
 │   │   │   └── service.py                     service status
-│   │   ├── __init__.py                        inti app
+│   │   ├── __init__.py                        
 │   │   ├── auth.py                            token decorators 
 │   │   └── config.py                          app configuration
-│   ├── dhr_logging                            logging moudle
+│   ├── dhr_logging                            logging module
 │   │   ├── __init__.py 
 │   │   ├── datetime.py
 │   │   ├── formatter.py
@@ -53,13 +53,12 @@ This is a part of proof-of-concept implementation of [MyData Architecture](https
 │   ├── logs                                   logging folder
 │   ├── data                                   dataset sample
 │   ├── create_db.sh                           script for creating database
-│   ├── init.sh                                script to excute read_conf.py and init_data.py           
+│   ├── init.sh                                script to execute read_conf.py and init_data.py           
 │   ├── read_conf.py                           read remote config
 │   ├── init_data                              init service's data 
 │   ├── requirements.txt                       requirements for running this server
 │   └── run.py                                 app entry point
-├── doc                                    API documentation
-└── LICENSE                               open source licsence
+└── doc                                        API documentation
 ```
 ### Documentation
 API Documentation can be found under /doc/swagger.yaml which follow standard Swagger Specification 2.0
