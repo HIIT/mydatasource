@@ -21,7 +21,7 @@ SECRET_KEY = 'dataSource'
 
 SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://dsource:123456@localhost/datasource'
 
-CONFIG_URI = 'http://178.62.244.150:8080/config'
+CONFIG_URI = 'http://127.0.0.1:8080/config'
 CONFIG_USERNAME = 'testuser'
 CONFIG_PASSWORD = 'Hello'
 
