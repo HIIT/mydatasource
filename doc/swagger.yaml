@@ -36,7 +36,7 @@ info:
         this endpoint cannot be used without first getting a RPT from an actual Data Operator.
   version: 0.1.0
   contact:
-    url: 'https://github.com/okffi/mydata'
+    url: 'https://github.com/dhrproject/mydataoperator'
   license:
     name: MIT
     url: 'http://opensource.org/licenses/MIT'
