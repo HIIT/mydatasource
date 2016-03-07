@@ -40,7 +40,7 @@ info:
   license:
     name: MIT
     url: 'http://opensource.org/licenses/MIT'
-host: '178.62.229.148:10001'
+host: '127.0.0.1'
 schemes:
   - http
   - https
