@@ -4,8 +4,9 @@
 import os
 import json
 import requests
+from app.config import DSOURCE_API
 
-HOSTNAME = 'http://127.0.0.1:10001/api/v0.1'
+HOSTNAME = DSOURCE_API
 
 ABS_PATH = os.path.dirname(os.path.abspath(__file__))
 
